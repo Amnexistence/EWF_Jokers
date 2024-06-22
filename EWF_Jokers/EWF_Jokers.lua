@@ -162,14 +162,15 @@ local jokers = {
             return {self.ability.extra.x_mult, self.ability.extra.counter}
         end        
 	},
-	Clockwork = {
-        name = "Clockwork",
+	FastWatch = {
+        name = "Fast Watch",
         text = {
-            "{C:chips}+#1#{} chips of minute at which past round ended",			
+            "{C:chips}+Chips{} of {C:attention}minute at which past round ended * 2{}",
+			"{C:inactive}(Currently {C:chips}+#1#{} Chips)",
 		},
-		ability = {extra={chips=os.date("%M"), counter=0}},
+		ability = {extra={chips=0, counter=0}},
 		pos = { x = 1, y = 0 },
-		chip_mod = os.date("%M"),
+		chip_mod = 0,
         rarity=1,
         cost = 4,
         blueprint_compat=true,
@@ -186,9 +187,9 @@ local jokers = {
                 end 
             end
 		if context.end_of_round and not (context.individual or context.repetition or context.blueprint) then
-                self.ability.extra.chips=os.date("%M")
+                self.ability.extra.chips=os.date("%M")*2
 				self.text = {
-				"{C:chips,s:1.1}+"..tostring(os.date("%M")).."{} current minutes chips",
+				"{C:chips,s:1.1}+"..tostring((os.date("%M")*2)).."{} current minutes chips",
 				}
 				return {
                     message = 'tick-tick',
@@ -445,8 +446,9 @@ local jokers = {
 	GoldenStrawberry = {
         name = "Golden Strawberry",
         text = {
-            "At the end of a {C:attention}round{} you gain {C:money}$#1#{},",			
+            "At the end of a {C:attention}round{} you gain {C:money}${},",			
 			"equal count of {C:attention}High Card{} played",
+			"{C:inactive}(Currently {C:money}+#1#{} dollars)",
 		},
 		ability = {
             extra={dollars=0} ,
@@ -533,7 +535,7 @@ local jokers = {
 	Fortuna = {
         name = "Fortuna",
         text = {
-            "Create random {C:tarot}Tarot{} card",			
+            "Create {C:attention}2{} random {C:tarot}Tarot{} card (may exceed the limit)",			
 			"after skipping each blind",
 			
 		},
@@ -546,13 +548,18 @@ local jokers = {
         effect=nil,
         soul_pos=nil,
         calculate = function(self,context)
-            if context.skip_blind and not (context.blueprint_card or self).getting_sliced and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
-			G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+            if context.skip_blind and not (context.blueprint_card or self).getting_sliced then
+			G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 2
+			G.E_MANAGER:add_event(Event({
+                    func = (function()
                 G.E_MANAGER:add_event(Event({
                     func = (function()
                         G.E_MANAGER:add_event(Event({
                             func = function() 
-                                local card = create_card('Tarot',G.consumeables, nil, nil, nil, nil, nil, 'fortuna')
+                                local card = create_card('Tarot',G.consumeables, nil, nil, nil, nil, nil, 'for')
+                                card:add_to_deck()
+                                G.consumeables:emplace(card)
+								local card = create_card('Tarot',G.consumeables, nil, nil, nil, nil, nil, 'tuna')
                                 card:add_to_deck()
                                 G.consumeables:emplace(card)
                                 G.GAME.consumeable_buffer = 0
@@ -560,6 +567,9 @@ local jokers = {
                             end}))   
                             card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil, {message = localize('k_plus_tarot'), colour = G.C.PURPLE})                       
                         return true
+                    end)}))
+					card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil, {message = localize('k_plus_tarot'), colour = G.C.PURPLE})
+					return true
                     end)}))
             end
             
