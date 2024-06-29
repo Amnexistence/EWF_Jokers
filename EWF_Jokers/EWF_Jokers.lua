@@ -19,16 +19,7 @@ local MOD_ID = "EWF_Jokers";
 -- https://store.steampowered.com/app/1392820/Milk_inside_a_bag_of_milk_inside_a_bag_of_milk/
 -- https://store.steampowered.com/app/1340480/The_Cosmic_Wheel_Sisterhood/
 
--- Thanks Blizzow !
--- https://github.com/BlizzowX/Balatro---Themed-Jokers
 
-
----Config---
-config = {
-vanillaart=true, --true/false enables alternative artworks
-
-}
----UTILITY METHODS---
 function calculateAge(birthDate) --calculate age
     local currentTime = os.time()
     local birthTime = os.time{year=birthDate.year, month=birthDate.month, day=birthDate.day}
@@ -581,65 +572,6 @@ local jokers = {
 	}
 	
 	function SMODS.INIT.EWF_Jokers()
-    
-    ---localization tooltips:---
-
-    
---[[
-    G.localization.descriptions.Other["enhancement"] = {
-        name = "Enhancement",
-        text = {
-            "This effect {C:red}can't{} change",
-            "the card into a {C:attention}Stone Card"
-        }
-    }
-    G.localization.descriptions.Other["retrigger"] = {
-        name = "Retrigger",
-        text = {
-            "At {C:green}100%+{} chance",
-            "+1 guaranteed {C:attention}retrigger{}.",
-            "{C:inactive}Capped at 120%"
-        }
-    }
-    G.localization.descriptions.Other["seals"] = {
-        name = "Seals",
-        text = {
-            "This effect includes",
-            "vanilla and modded seals.",
-            "{C:inactive}Only affects cards",
-            "{C:inactive}without a seal."
-        }
-    }
-    G.localization.descriptions.Other["edition"] = {
-        name = "Editions",
-        text = {
-            "Possible editions:",
-            "{C:attention}Foil{}, {C:attention}Holographic{}",
-            "and {C:attention}Polychrome{}",
-            "{C:inactive}Only affects cards",
-            "{C:inactive}without a edition."
-        }
-    }
-    G.localization.descriptions.Other["blind_size"] = {
-        name = "Blind Size",
-        text = {
-            "Decreases the",
-            "required {C:attention}Chips{} to",
-            "beat the blind.",
-            "{C:inactive}Capped at 70%"
-        }
-    }
-    G.localization.descriptions.Other["chipvalue"] = {
-        name = "Chip Value",
-        text = {
-            "Card's base chips",
-            "+ added bonus chips",
-            "{C:inactive}Does not include",
-            "{C:inactive}edition bonus chips."
-        }
-    }
-	
-	--]]
 	
     init_localization()
 
